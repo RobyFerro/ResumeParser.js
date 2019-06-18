@@ -1,20 +1,15 @@
 const textract = require('textract');
-const moment = require('moment');
 const fs = require('fs');
-
-exports.checkEnd = (parsedResumes, resumeNumber, faceList) => {
-	return new Promise(resolve => {
-		if(parsedResumes === resumeNumber) {
-			console.log(`\nSUCCESS: I've found ${faceList.length} faces in ${resumeNumber} resumes`);
-		}
-		
-		resolve(true);
-	});
-};
+const config = require('../../config');
+const path = require('path');
+const img = require('../modules/img');
+const shell = require('shelljs');
+const utils = require('../modules/utils');
+const log = require('../modules/log');
 
 exports.getText = (resume, verbose = false) => {
 	if(verbose) {
-		console.log(`[${moment(Date.now()).format('DD/MM/YYYY HH:mm:ss')}] - Getting text from ${resume}`);
+		log.createLogDate(`Getting text from ${resume}`);
 	}
 	return new Promise((resolve, reject) => {
 		textract.fromFileWithPath(resume, async(err, text) => {
@@ -63,5 +58,113 @@ exports.findDataInText = (text) => {
 
 exports.createJsonResult = (hash, data, resultPath) => {
 	fs.writeFileSync(`${resultPath}/${hash}.json`, JSON.stringify(data));
-	console.log(`[${moment(Date.now()).format('DD/MM/YYYY HH:mm:ss')}] - Write results in ${resultPath}/${hash}.json`);
+	log.createLogDate(`Write results in ${resultPath}/${hash}.json`);
+};
+
+exports.createTmpFileName = (file) => {
+	return `${Date.now().toString()}${Math.random().toString().substr(5)}`;
+};
+
+exports.moveFile = (source, to) => {
+	return new Promise((resolve, reject) => {
+		const fromFile = fs.createReadStream(source);
+		const toFile = fs.createWriteStream(to);
+		
+		try {
+			fromFile.pipe(toFile);
+			toFile.on('finish', () => {
+				fs.unlinkSync(source);
+				resolve(true);
+			});
+		} catch(e) {
+			reject(e);
+		}
+	});
+};
+
+exports.createStream = (resume, hash, verbose) => {
+	return new Promise((resolve, reject) => {
+		const ext = path.extname(resume);
+		const targetSource = `${config.tmp.document}/${hash}${ext}`;
+		const readStream = fs.createReadStream(resume);
+		const writeStream = fs.createWriteStream(targetSource);
+		
+		readStream.pipe(writeStream);
+		writeStream.on('finish', () => {
+			
+			if(path.extname(targetSource) !== '.pdf') {
+				
+				img.getPdf(targetSource, verbose);
+				fs.unlinkSync(targetSource);
+			}
+			
+			let name = `${path.basename(targetSource, path.extname(targetSource))}.pdf`;
+			
+			const parseImages = img.extractImages(config.tmp.document, name, hash, verbose).then(async() => {
+				const imageList = fs.readdirSync(config.tmp.img);
+				const faces = [];
+				
+				for(let image of imageList) {
+					if(verbose) {
+						log.createLogDate(`Parsing ${image} present in ${name}`);
+					}
+					
+					if(!image.match(hash)) {
+						continue;
+					}
+					
+					try {
+						let imgSize = await img.getImageSize(`${config.tmp.img}/${image}`);
+						let aspectRatio = img.getAspectRatio(imgSize.width, imgSize.height);
+						
+						if((aspectRatio.raw.width / aspectRatio.raw.height) <= 1 && imgSize.height > 100) {
+							
+							const face = shell.exec(`python ${path.resolve(__dirname, '../', 'detect_face.py')} -i ${config.tmp.img}/${image}`);
+							if(face.code === 0) {
+								if(verbose) {
+									log.createLogDate(`Found face in ${image}`);
+								}
+								
+								faces.push(image);
+							} else {
+								fs.unlinkSync(`${config.tmp.img}/${image}`);
+							}
+							
+						} else {
+							fs.unlinkSync(`${config.tmp.img}/${image}`);
+						}
+						
+					} catch(e) {
+						console.log(e);
+						throw e;
+					}
+				}
+				
+				const result = [];
+				faces.map(async item => {
+					await module.exports.moveFile(`${config.tmp.img}/${item}`, `${config.results}/${item}`);
+					result.push(`${config.results}/${item}`);
+				});
+				
+				return result;
+			}).catch(err => {
+				reject(err);
+			});
+			
+			const parseText = utils.getText(`${config.tmp.document}/${name}`, verbose).then(text => {
+				if(verbose) {
+					log.createLogDate(`Text of ${name} obtained!`);
+				}
+				return text;
+			}).catch(err => {
+				reject(err);
+			});
+			
+			Promise.all([parseImages, parseText]).then(async results => {
+				await module.exports.moveFile(`${config.tmp.document}/${name}`, `${config.results}/${name}`);
+				resolve(results);
+			});
+		});
+	});
+	
 };
