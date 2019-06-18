@@ -1,0 +1,7 @@
+{
+  "eqeqeq": true,
+  "esversion": 8,
+  "loopfunc": true,
+  "curly": true,
+  "maxdepth": 3
+}
