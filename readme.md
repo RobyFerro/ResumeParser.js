@@ -92,7 +92,7 @@ To start web server just run this command in root directory:
 npm start
 ```
 
-### Available apis
+### Available API
 ###### POST: [YOURDOMAIN]:3000/parse
 Send a resume in this route. Return a JSON object which contains every information about it.
 
