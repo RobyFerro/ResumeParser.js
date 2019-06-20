@@ -3,6 +3,7 @@ const app = express();
 const port = 3000;
 const parseController = require('./controllers/parseController');
 
+
 app.get('/', (req, res) => res.send('Welcome to ResumeParser.js'));
 app.post('/parse',parseController.parse);
 

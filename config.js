@@ -5,5 +5,8 @@ module.exports = {
 		img: path.join(__dirname, 'tmp/images'),
 		document: path.join(__dirname, 'tmp/document')
 	},
-	results: path.join(__dirname, 'results')
+	results: path.join(__dirname, 'results'),
+	parse: {
+		chunk: 5
+	}
 };

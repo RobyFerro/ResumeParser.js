@@ -3,72 +3,88 @@ const path = require('path');
 const fs = require('fs');
 const log = require('../modules/log');
 const config = require('../../config');
+const _ = require('lodash');
 
 class Parser {
-	constructor(sourcePath, verbose = false, response = null) {
+	constructor(sourcePath, verbose, response = null) {
 		this.source = path.resolve('./', sourcePath);
 		this.response = response;
 		this.verbose = verbose;
 	}
 	
-	parseSingleResume(outputDir = null) {
+	parseSingleResume(outputDir, outputPrefix = null) {
 		return new Promise((resolve, reject) => {
 			log.createLogDate(`Analyzing ${this.source}`);
-			const hashName = utils.createTmpFileName(this.source);
-			utils.createStream(this.source, hashName, this.verbose).then(results => {
+			const hashName = utils.createTmpFileName(outputPrefix);
+			utils.createStream(this.source, hashName, this.verbose, outputDir).then(results => {
 				
-				if(outputDir !== null) {
-					utils.createJsonResult(
-						hashName,
-						{
-							image: results[0],
-							data: results[1]
-						},
-						typeof outputDir === "boolean" ? config.results : path.resolve('./', outputDir),
-					);
-				}
-				log.createLogDate(`Operation completed`);
+				const data = {
+					image: results[0],
+					data: results[1]
+				};
+				
+				const prefix = outputPrefix !== null ? outputPrefix : hashName;
+				
 				if(this.response !== null) {
-					this.response.json(results);
+					log.createLogDate(`Operation completed`);
+					this.response.json(data);
 				} else {
-					resolve(results);
+					
+					const jsonName = outputPrefix ? outputPrefix : path.basename(this.source, path.extname(this.source));
+					
+					utils.createJsonResult(jsonName, prefix, data, outputDir);
+					log.createLogDate(`Operation completed`);
+					resolve(data);
 				}
 			}).catch(err => reject(err));
 		});
 		
 	};
 	
-	parseMultipleResumeFromPath(outputDir = null) {
-		return new Promise((resolve, reject) => {
+	parseMultipleResumeFromPath(outputDir) {
+		return new Promise(async(resolve, reject) => {
 			const resumeList = fs.readdirSync(this.source);
-			const streams = [];
+			const chunks = _.chunk(resumeList, config.parse.chunk);
 			
-			for(let resume of resumeList) {
+			try {
+				for(let chunk of chunks) {
+					await this.parseChunkOfResumes(chunk, outputDir);
+				}
+				
+				resolve();
+			} catch(e) {
+				reject(e);
+			}
+		});
+	};
+	
+	parseChunkOfResumes(chunk, outputDir) {
+		return new Promise((resolve, reject) => {
+			const streams = [];
+			for(let resume of chunk) {
+				if(this.verbose) {
+					log.createLogDate(`Analyzing ${resume}`);
+				}
 				const sourceFile = `${this.source}/${resume}`;
-				const hashName = utils.createTmpFileName(sourceFile);
-				const stream = utils.createStream(sourceFile, hashName, this.verbose).then(results => {
-					if(outputDir !== null) {
-						utils.createJsonResult(
-							hashName,
-							{
-								image: results[0],
-								data: results[1]
-							},
-							typeof outputDir === "boolean" ? config.results : path.resolve('./', outputDir),
-						);
-					}
+				const hashName = utils.createTmpFileName();
+				const stream = utils.createStream(sourceFile, hashName, this.verbose, outputDir).then(results => {
+					
+					const data = {
+						image: results[0],
+						data: results[1]
+					};
+					
+					utils.createJsonResult(path.basename(resume, path.extname(resume)), hashName, data, outputDir);
 				});
 				streams.push(stream);
 			}
 			
 			Promise.all(streams).then(() => {
-				resolve({
-					resumeCount: resumeList.length
-				});
+				resolve();
 			}).catch(err => reject(err));
+			
 		});
-		
-	};
+	}
 }
 
 module.exports = Parser;

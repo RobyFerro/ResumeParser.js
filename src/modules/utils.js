@@ -56,33 +56,47 @@ exports.findDataInText = (text) => {
 	});
 };
 
-exports.createJsonResult = (hash, data, resultPath) => {
-	fs.writeFileSync(`${resultPath}/${hash}.json`, JSON.stringify(data));
-	log.createLogDate(`Write results in ${resultPath}/${hash}.json`);
+exports.createJsonResult = (origin, hash, data, resultPath) => {
+	try {
+		fs.writeFileSync(`${resultPath}/${origin}.json`, JSON.stringify(data));
+		log.createLogDate(`Write results in ${resultPath}/${origin}.json`);
+	} catch(e) {
+		throw e;
+	}
 };
 
-exports.createTmpFileName = (file) => {
+exports.createTmpFileName = (custom = null) => {
+	if(custom !== null) {
+		return custom;
+	}
 	return `${Date.now().toString()}${Math.random().toString().substr(5)}`;
 };
 
 exports.moveFile = (source, to) => {
-	return new Promise((resolve, reject) => {
+	const copy = new Promise((resolve, reject) => {
 		const fromFile = fs.createReadStream(source);
 		const toFile = fs.createWriteStream(to);
 		
-		try {
-			fromFile.pipe(toFile);
-			toFile.on('finish', () => {
-				fs.unlinkSync(source);
-				resolve(true);
-			});
-		} catch(e) {
-			reject(e);
-		}
+		fromFile.pipe(toFile);
+		
+		toFile.on('error', error => {
+			reject(error);
+		});
+		
+		toFile.on('finish', () => {
+			resolve(true);
+		});
 	});
+	
+	copy.then(() => {
+		fs.unlinkSync(source);
+	}).catch(err => {
+		throw err;
+	});
+	
 };
 
-exports.createStream = (resume, hash, verbose) => {
+exports.createStream = (resume, hash, verbose, output) => {
 	return new Promise((resolve, reject) => {
 		const ext = path.extname(resume);
 		const targetSource = `${config.tmp.document}/${hash}${ext}`;
@@ -142,7 +156,8 @@ exports.createStream = (resume, hash, verbose) => {
 				
 				const result = [];
 				faces.map(async item => {
-					await module.exports.moveFile(`${config.tmp.img}/${item}`, `${config.results}/${item}`);
+					const outputDir = output ? output : config.results;
+					await module.exports.moveFile(`${config.tmp.img}/${item}`, `${outputDir}/${item}`);
 					result.push(`${config.results}/${item}`);
 				});
 				
@@ -161,7 +176,8 @@ exports.createStream = (resume, hash, verbose) => {
 			});
 			
 			Promise.all([parseImages, parseText]).then(async results => {
-				await module.exports.moveFile(`${config.tmp.document}/${name}`, `${config.results}/${name}`);
+				const outputDir = output ? output : config.results;
+				await module.exports.moveFile(`${config.tmp.document}/${name}`, `${outputDir}/${name}`);
 				resolve(results);
 			});
 		});
