@@ -66,7 +66,7 @@ Install face recognition dependency with
 pip install face_recognition
 ```
 
-## Usage
+## CLI Usage
 
 ```
 node src/parser.js -d <RESUMES-DIRECTORY> -eD <EXPORT-RESULT-DIR> 
@@ -84,3 +84,15 @@ Specific an output directory. Every results will be placed here.
 Option available only with -f/--file option. Used to specific an output file name.
 ###### -v / --verbose : default "false"
 Show verbose information
+
+## Server usage
+ResumeParser.js includes an express web server that allow you to parse a single resume just calling an HTTP service.
+To start web server just run this command in root directory:
+```
+npm start
+```
+
+### Available apis
+###### POST: [YOURDOMAIN]:3000/parse
+Send a resume in this route. Return a JSON object which contains every information about it.
+

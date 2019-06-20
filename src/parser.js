@@ -33,7 +33,7 @@ program.parse(process.argv);
 
 console.log('---------------------------------------------------------------------------------------------------');
 console.log('###################################################################################################');
-console.log(figlet.textSync('ResumeParser.js CLI', {
+console.log(figlet.textSync('ResumeParser.js', {
 	horizontalLayout: 'default',
 	verticalLayout: 'default'
 }) + 'v1.0');
