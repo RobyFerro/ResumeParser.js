@@ -1,1 +1,0 @@
-Directory for tmp images. Customize it in /config.js

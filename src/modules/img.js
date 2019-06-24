@@ -4,6 +4,14 @@ const sizeOf = require('image-size');
 const shell = require('shelljs');
 const log = require('./log');
 
+/**
+ *
+ * @param path
+ * @param resume
+ * @param hash
+ * @param verbose
+ * @returns {Promise<any>}
+ */
 exports.extractImages = (path, resume, hash = null, verbose = false) => {
 	if(verbose) {
 		log.createLogDate(`Extracting image from ${resume}`);
@@ -19,6 +27,11 @@ exports.extractImages = (path, resume, hash = null, verbose = false) => {
 	});
 };
 
+/**
+ *
+ * @param image
+ * @returns {Promise<any>}
+ */
 exports.getImageSize = image => {
 	return new Promise((resolve, reject) => {
 		sizeOf(image, (err, dimension) => {
@@ -30,6 +43,12 @@ exports.getImageSize = image => {
 	});
 };
 
+/**
+ *
+ * @param width
+ * @param height
+ * @returns {{raw: {width: number, height: number}, ratio: string}}
+ */
 exports.getAspectRatio = (width, height) => {
 	const getGcd = (a, b) => {
 		if(!b) {
@@ -51,6 +70,11 @@ exports.getAspectRatio = (width, height) => {
 	};
 };
 
+/**
+ *
+ * @param filePath
+ * @param verbose
+ */
 exports.getPdf = (filePath, verbose = false) => {
 	if(verbose) {
 		log.createLogDate(`Converting ${filePath} in PDF`);

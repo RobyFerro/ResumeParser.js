@@ -12,8 +12,8 @@ program.version('v1.0')
 	.description('ResumeParser.js CLI: Simple tool to extract data from resumes.')
 	.option('-d, --dir <value>', 'Select source directory')
 	.option('-f, --file <value>', "Select a resume that you'd like to parse")
-	.option('-oN, --output-name <value>', 'Select export name')
-	.option('-eD, --extract-data <value>', 'Select output directory', config.results)
+	.option('-o, --output-name <value>', 'Select export name')
+	.option('-e, --extract-dir <value>', 'Select output directory', config.results)
 	.option('-v, --verbose', 'Verbose output', false);
 
 program.on('--help', function() {
@@ -21,7 +21,7 @@ program.on('--help', function() {
 	console.log('Examples:');
 	console.log('');
 	console.log('  $ node parser.js -d example/ -eD -v');
-	console.log('  $ node parser.js -f example/resume.doc -eD -oN "resume" -v');
+	console.log('  $ node parser.js -f example/resume.doc -e -o "resume" -v');
 	console.log('');
 	console.log('Start http server with:');
 	console.log('');
@@ -51,15 +51,15 @@ if(!program.dir && !program.file) {
 	log.createLogDate(`Found ${resumeList.length} resumes in ${sourceDir}. Analyzing...`);
 	
 	if(program.outputName) {
-		log.createLogDate('Cannot use custom name with --dir option.');
+		log.createLogDate('Cannot use custom name with --dir option. Ignoring...');
 	}
 	
-	new Parser(sourceDir, program.verbose).parseMultipleResumeFromPath(program.extractData)
+	new Parser(sourceDir, program.verbose).parseMultipleResumeFromPath(program.extractDir)
 		.then(() => {
 			log.createLogDate(`Operation completed`);
 		});
 } else if(program.file && !program.dir) {
-	new Parser(program.file, program.verbose).parseSingleResume(program.extractData, program.outputName);
+	new Parser(program.file, program.verbose).parseSingleResume(program.extractDir, program.outputName);
 } else {
 	console.error('Please select a resume file...');
 }

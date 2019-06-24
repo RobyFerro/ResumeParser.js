@@ -7,6 +7,12 @@ const shell = require('shelljs');
 const utils = require('../modules/utils');
 const log = require('../modules/log');
 
+/**
+ *
+ * @param resume
+ * @param verbose
+ * @returns {Promise<any>}
+ */
 exports.getText = (resume, verbose = false) => {
 	if(verbose) {
 		log.createLogDate(`Getting text from ${resume}`);
@@ -24,6 +30,11 @@ exports.getText = (resume, verbose = false) => {
 	});
 };
 
+/**
+ *
+ * @param text
+ * @returns {Promise<any>}
+ */
 exports.findDataInText = (text) => {
 	return new Promise(resolve => {
 		
@@ -56,6 +67,13 @@ exports.findDataInText = (text) => {
 	});
 };
 
+/**
+ *
+ * @param origin
+ * @param hash
+ * @param data
+ * @param resultPath
+ */
 exports.createJsonResult = (origin, hash, data, resultPath) => {
 	try {
 		fs.writeFileSync(`${resultPath}/${origin}.json`, JSON.stringify(data));
@@ -65,6 +83,11 @@ exports.createJsonResult = (origin, hash, data, resultPath) => {
 	}
 };
 
+/**
+ *
+ * @param custom
+ * @returns {string|*}
+ */
 exports.createTmpFileName = (custom = null) => {
 	if(custom !== null) {
 		return custom;
@@ -72,30 +95,14 @@ exports.createTmpFileName = (custom = null) => {
 	return `${Date.now().toString()}${Math.random().toString().substr(5)}`;
 };
 
-exports.moveFile = (source, to) => {
-	const copy = new Promise((resolve, reject) => {
-		const fromFile = fs.createReadStream(source);
-		const toFile = fs.createWriteStream(to);
-		
-		fromFile.pipe(toFile);
-		
-		toFile.on('error', error => {
-			reject(error);
-		});
-		
-		toFile.on('finish', () => {
-			resolve(true);
-		});
-	});
-	
-	copy.then(() => {
-		fs.unlinkSync(source);
-	}).catch(err => {
-		throw err;
-	});
-	
-};
-
+/**
+ *
+ * @param resume
+ * @param hash
+ * @param verbose
+ * @param output
+ * @returns {Promise<any>}
+ */
 exports.createStream = (resume, hash, verbose, output) => {
 	return new Promise((resolve, reject) => {
 		const ext = path.extname(resume);
@@ -157,7 +164,7 @@ exports.createStream = (resume, hash, verbose, output) => {
 				const result = [];
 				faces.map(async item => {
 					const outputDir = output ? output : config.results;
-					await module.exports.moveFile(`${config.tmp.img}/${item}`, `${outputDir}/${item}`);
+					fs.renameSync(`${config.tmp.img}/${item}`, `${outputDir}/${item}`);
 					result.push(`${config.results}/${item}`);
 				});
 				
@@ -177,7 +184,7 @@ exports.createStream = (resume, hash, verbose, output) => {
 			
 			Promise.all([parseImages, parseText]).then(async results => {
 				const outputDir = output ? output : config.results;
-				await module.exports.moveFile(`${config.tmp.document}/${name}`, `${outputDir}/${name}`);
+				fs.renameSync(`${config.tmp.document}/${name}`, `${outputDir}/${name}`);
 				resolve(results);
 			});
 		});
