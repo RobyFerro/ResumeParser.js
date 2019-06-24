@@ -185,6 +185,8 @@ exports.createStream = (resume, hash, verbose, output) => {
 			Promise.all([parseImages, parseText]).then(async results => {
 				const outputDir = output ? output : config.results;
 				fs.renameSync(`${config.tmp.document}/${name}`, `${outputDir}/${name}`);
+				
+				results.push(`${outputDir}/${name}`);
 				resolve(results);
 			});
 		});

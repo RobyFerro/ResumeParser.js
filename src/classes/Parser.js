@@ -20,7 +20,8 @@ class Parser {
 				
 				const data = {
 					image: results[0],
-					data: results[1]
+					data: results[1],
+					document: results[2],
 				};
 				
 				const prefix = outputPrefix !== null ? outputPrefix : hashName;
@@ -71,7 +72,8 @@ class Parser {
 					
 					const data = {
 						image: results[0],
-						data: results[1]
+						data: results[1],
+						document: results[2],
 					};
 					
 					utils.createJsonResult(path.basename(resume, path.extname(resume)), hashName, data, outputDir);
