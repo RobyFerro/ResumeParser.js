@@ -100,7 +100,4 @@ typings/
 /Vagrantfile
 /resumes/
 
-tmp/
-!tmp/**/*.md
-
 
