@@ -2,7 +2,7 @@ const utils = require('../modules/utils');
 const path = require('path');
 const fs = require('fs');
 const log = require('../modules/log');
-const config = require('../../config');
+const config = require('../../resume.config');
 const _ = require('lodash');
 
 class Parser {

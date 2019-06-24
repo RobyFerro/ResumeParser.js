@@ -1,7 +1,7 @@
 const utils = require('./utils');
 const path = require('path');
 const fs = require('fs');
-const config = require('../../config');
+const config = require('../../resume.config');
 
 test('utils.getText', () => {
 	jest.setTimeout(30000);

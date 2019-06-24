@@ -5,8 +5,7 @@ const fs = require('fs');
 const figlet = require('figlet');
 const Parser = require('./classes/Parser');
 const log = require('./modules/log');
-const config = require('../config');
-
+const config = require('../resume.config');
 
 program.version('v1.0')
 	.description('ResumeParser.js CLI: Simple tool to extract data from resumes.')

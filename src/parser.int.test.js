@@ -1,6 +1,6 @@
 const Parser = require('./classes/Parser');
 const path = require('path');
-const config = require('../config');
+const config = require('../resume.config');
 const fs = require('fs');
 
 test('parser.single', () => {

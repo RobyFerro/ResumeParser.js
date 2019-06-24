@@ -1,5 +1,5 @@
 const cmd = require('node-cmd');
-const config = require('../../config');
+const config = require('../../resume.config');
 const sizeOf = require('image-size');
 const shell = require('shelljs');
 const log = require('./log');
@@ -79,7 +79,7 @@ exports.getPdf = (filePath, verbose = false) => {
 	if(verbose) {
 		log.createLogDate(`Converting ${filePath} in PDF`);
 	}
-	shell.exec(`export HOME=/tmp/; libreoffice6.1 --headless --convert-to pdf ${filePath} --outdir ${config.tmp.document} > /dev/null 2>&1`);
+	shell.exec(`export HOME=/tmp/; ${config.tool.libreoffice} --headless --convert-to pdf ${filePath} --outdir ${config.tmp.document} > /dev/null 2>&1`);
 };
 
 

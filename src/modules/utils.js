@@ -1,6 +1,6 @@
 const textract = require('textract');
 const fs = require('fs');
-const config = require('../../config');
+const config = require('../../resume.config');
 const path = require('path');
 const img = require('../modules/img');
 const shell = require('shelljs');

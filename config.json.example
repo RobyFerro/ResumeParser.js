@@ -1,0 +1,14 @@
+{
+	"tmp": {
+		"base": "tmp/",
+		"img": "tmp/images",
+		"document": "tmp/document"
+	},
+	"results": "results",
+	"parse": {
+		"chunk": 5
+	},
+	"tool": {
+		"libreoffice": "libreoffice6.1"
+	}
+}

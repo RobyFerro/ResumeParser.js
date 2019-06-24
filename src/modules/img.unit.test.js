@@ -1,7 +1,7 @@
 const img = require('./img');
 const path = require('path');
 const fs = require('fs');
-const config = require('../../config');
+const config = require('../../resume.config');
 
 test('image.aspectRatio', () => {
 	const aspectRatio = JSON.stringify(img.getAspectRatio(1920, 1080));
