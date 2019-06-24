@@ -8,6 +8,11 @@ const utils = require('../modules/utils');
 const log = require('../modules/log');
 
 exports.createTmpDir = () => {
+	// Temporary root
+	if(!fs.existsSync(config.tmp.base)) {
+		fs.mkdirSync(config.tmp.base);
+	}
+	
 	// Temporary images
 	if(!fs.existsSync(config.tmp.img)) {
 		fs.mkdirSync(config.tmp.img);
