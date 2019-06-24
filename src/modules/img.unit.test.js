@@ -38,15 +38,15 @@ test('image.extractImage', () => {
 });
 
 test('image.pdfConversion', () => {
-	img.getPdf(`${path.join(__dirname, '../../example')}/test.doc`);
+	img.getPdf(`${path.join(__dirname, '../../example')}/test-1.doc`);
 	const documents = fs.readdirSync(path.join(__dirname, '../../tmp/document'));
 	let converted = null;
 	for(let doc of documents) {
-		if(doc === 'test.pdf') {
+		if(doc === 'test-1.pdf') {
 			converted = true;
 			break;
 		}
 	}
 	expect(converted).toBeTruthy();
-	fs.unlinkSync(`${path.join(__dirname, '../../tmp/document')}/test.pdf`);
+	fs.unlinkSync(`${path.join(__dirname, '../../tmp/document')}/test-1.pdf`);
 });

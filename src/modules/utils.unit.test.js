@@ -19,7 +19,6 @@ test('utils.createJsonResult', () => {
 	
 	utils.createJsonResult('test', '', {test: 'newResult'}, resultPath);
 	for(let file of fs.readdirSync(resultPath)) {
-		console.log(file);
 		if(file === 'test.json') {
 			resultFile = true;
 			break;
@@ -37,7 +36,7 @@ test('utils.createTmpFileName', () => {
 test('utils.createStream', () => {
 	jest.setTimeout(60000);
 	return utils.createStream(
-		`${path.join(__dirname, '../../example')}/test.doc`,
+		`${path.join(__dirname, '../../example')}/test-1.doc`,
 		'parsedResume',
 		false,
 		config.results)

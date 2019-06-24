@@ -51,7 +51,7 @@ class Parser {
 					await this.parseChunkOfResumes(chunk, outputDir);
 				}
 				
-				resolve();
+				resolve(true);
 			} catch(e) {
 				reject(e);
 			}
