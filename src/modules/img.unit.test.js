@@ -1,6 +1,7 @@
 const img = require('./img');
 const path = require('path');
 const fs = require('fs');
+const config = require('../../config');
 
 test('image.aspectRatio', () => {
 	const aspectRatio = JSON.stringify(img.getAspectRatio(1920, 1080));
@@ -17,7 +18,7 @@ test('image.extractImage', () => {
 	return img.extractImages(
 		path.join(__dirname, '../../example'), 'test.pdf', 'test').then(
 		() => {
-			const sourcePath = path.join(__dirname, '../../tmp/images');
+			const sourcePath = config.tmp.img;
 			const images = fs.readdirSync(sourcePath);
 			expect(images.length).toBeGreaterThan(0);
 			
@@ -39,7 +40,7 @@ test('image.extractImage', () => {
 
 test('image.pdfConversion', () => {
 	img.getPdf(`${path.join(__dirname, '../../example')}/test-1.doc`);
-	const documents = fs.readdirSync(path.join(__dirname, '../../tmp/document'));
+	const documents = fs.readdirSync(config.tmp.document);
 	let converted = null;
 	for(let doc of documents) {
 		if(doc === 'test-1.pdf') {
@@ -48,5 +49,5 @@ test('image.pdfConversion', () => {
 		}
 	}
 	expect(converted).toBeTruthy();
-	fs.unlinkSync(`${path.join(__dirname, '../../tmp/document')}/test-1.pdf`);
+	fs.unlinkSync(`${config.tmp.document}/test-1.pdf`);
 });

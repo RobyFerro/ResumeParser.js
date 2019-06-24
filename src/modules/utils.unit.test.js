@@ -14,7 +14,7 @@ test('utils.getText', () => {
 });
 
 test('utils.createJsonResult', () => {
-	const resultPath = path.join(__dirname, '../../results');
+	const resultPath = config.results
 	let resultFile = null;
 	
 	utils.createJsonResult('test', '', {test: 'newResult'}, resultPath);
@@ -41,8 +41,8 @@ test('utils.createStream', () => {
 		false,
 		config.results)
 		.then(result => {
-			fs.unlinkSync(`${path.join(__dirname, '../../results')}/parsedResume.pdf`);
-			fs.unlinkSync(`${path.join(__dirname, '../../results')}/parsedResume-000.png`);
+			fs.unlinkSync(`${config.results}/parsedResume.pdf`);
+			fs.unlinkSync(`${config.results}/parsedResume-000.png`);
 			expect(typeof result).toBe('object');
 		});
 });

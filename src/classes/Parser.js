@@ -10,6 +10,7 @@ class Parser {
 		this.source = path.resolve('./', sourcePath);
 		this.response = response;
 		this.verbose = verbose;
+		utils.createTmpDir();
 	}
 	
 	parseSingleResume(outputDir, outputPrefix = null) {

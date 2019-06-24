@@ -7,6 +7,19 @@ const shell = require('shelljs');
 const utils = require('../modules/utils');
 const log = require('../modules/log');
 
+exports.createTmpDir = () => {
+	// Temporary images
+	if(!fs.existsSync(config.tmp.img)) {
+		fs.mkdirSync(config.tmp.img);
+	}
+	
+	// Temporary images documents
+	if(!fs.existsSync(config.tmp.document)) {
+		fs.mkdirSync(config.tmp.document);
+	}
+};
+
+
 /**
  *
  * @param resume
