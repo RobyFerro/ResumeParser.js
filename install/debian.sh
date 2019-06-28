@@ -8,5 +8,5 @@ sudo apt-get -y install antiword
 sudo apt-get -y install unrtf
 sudo apt-get -y install tesseract-ocr
 
-chmod +x ./python_dependencies.sh && bin/python_dependencies.sh
-chmof +x ./create_dir.sh && bin/create_dir.sh
+chmod +x ./tools/python_dependencies.sh && bin/python_dependencies.sh
+chmod +x ./tools/create_dir.sh && bin/create_dir.sh
