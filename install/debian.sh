@@ -11,3 +11,6 @@ sudo apt-get -y install tesseract-ocr
 
 chmod +x ./tools/python_dependencies.sh && ./tools/python_dependencies.sh
 chmod +x ./tools/create_dir.sh && ./tools/create_dir.sh
+
+echo "INSTALLING NODE DEPENDENCIES"
+cd ../ && npm install

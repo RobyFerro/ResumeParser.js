@@ -17,3 +17,6 @@ sudo rm -rf *.rpm
 
 sudo chmod +x ./tools/python_dependencies.sh && ./tools/python_dependencies.sh
 sudo chmod +x ./tools/create_dir.sh && ./tools/create_dir.sh
+
+echo "INSTALLING NODE DEPENDENCIES"
+cd ../ && npm install
