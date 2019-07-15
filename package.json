@@ -18,7 +18,7 @@
 		"formidable": "^1.2.1",
 		"fs": "0.0.1-security",
 		"image-size": "^0.7.4",
-		"lodash": "^4.17.11",
+		"lodash": "^4.17.13",
 		"moment": "^2.24.0",
 		"node-cmd": "^3.0.0",
 		"shelljs": "^0.8.3",
