@@ -9,6 +9,6 @@
 		"chunk": 5
 	},
 	"tool": {
-		"libreoffice": "libreoffice6.1"
+		"libreoffice": "libreoffice"
 	}
 }

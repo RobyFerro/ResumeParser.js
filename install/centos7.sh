@@ -13,6 +13,7 @@ sudo wget http://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/u/un
 sudo rpm -Uvh unrtf-0.21.9-8.el7.x86_64.rpm
 sudo yum install unrtf
 sudo yum install -y tesseract
+sudo yum install -y python-devel
 sudo rm -rf *.rpm
 
 sudo chmod +x ./tools/python_dependencies.sh && ./tools/python_dependencies.sh
