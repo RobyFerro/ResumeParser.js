@@ -1,8 +1,13 @@
 language: node_js
 node_js:
 - "10"
+dist: bionic
+before_install:
+- cp config.json.example config.json
+- cd install && sh debian.sh
 install:
 - npm update
+- npm install
 - npm install -g jest
 script:
 - npm test
