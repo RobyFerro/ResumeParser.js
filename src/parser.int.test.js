@@ -10,6 +10,9 @@ test('parser.single', () => {
 		
 		const results = fs.readdirSync(config.results);
 		for(let file of results) {
+			if(path.extname(file) === ''){
+				continue;
+			}
 			fs.unlinkSync(`${config.results}/${file}`);
 		}
 		
@@ -25,6 +28,9 @@ test('parser.multiple', () => {
 		.then(result => {
 			const results = fs.readdirSync(config.results);
 			for(let file of results) {
+				if(path.extname(file) === ''){
+					continue;
+				}
 				fs.unlinkSync(`${config.results}/${file}`);
 			}
 			expect(typeof result).toBeTruthy();

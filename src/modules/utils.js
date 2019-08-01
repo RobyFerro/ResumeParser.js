@@ -148,7 +148,7 @@ exports.createStream = (resume, hash, verbose, output) => {
 						log.createLogDate(`Parsing ${image} present in ${name}`);
 					}
 					
-					if(!image.match(hash)) {
+					if(!image.match(hash) || path.extname(image) === '') {
 						continue;
 					}
 					

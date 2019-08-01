@@ -23,6 +23,11 @@ test('image.extractImage', () => {
 			expect(images.length).toBeGreaterThan(0);
 			
 			for(let image of images) {
+				
+				if(path.extname(image) === ''){
+					continue;
+				}
+				
 				img.getImageSize(`${sourcePath}/${image}`).then(result => {
 					expect(result).toHaveProperty('width');
 					expect(result).toHaveProperty('height');
