@@ -1,4 +1,6 @@
 # ResumeParser.js
+[![Build Status](https://travis-ci.org/RobyFerro/ResumeParser.js.svg?branch=master)](https://travis-ci.org/RobyFerro/ResumeParser.js)
+
 Simple tool to extract data from resumes.
 
 ![ResumeParser.js](screenshot.png) 
