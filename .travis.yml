@@ -4,9 +4,9 @@ node_js:
 notifications:
 	email: false
 before_install:
-- npm update
+	- npm update
 install:
-- npm install
-- npm install -g jest
+	- npm install
+	- npm install -g jest
 script:
-- npm test
+	- npm test
