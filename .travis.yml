@@ -1,10 +1,8 @@
 language: node_js
 node_js:
 - "10"
-notifications:
-	email: false
 install:
-	- npm update
-	- npm install -g jest
+- npm update
+- npm install -g jest
 script:
-	- npm test
+- npm test
