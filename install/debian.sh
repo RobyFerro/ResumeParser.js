@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-sudo add-apt-repository ppa:libreoffice/ppa
 sudo apt-get update
 sudo apt-get -y install libreoffice
 sudo apt-get -y install cmake
